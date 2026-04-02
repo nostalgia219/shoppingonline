@@ -1,0 +1,262 @@
+.bestselling-products {
+  width: 100%;
+  padding: 80px 20px;
+  background: #0a0a0a;
+  margin-bottom: 60px;
+}
+
+.bestselling-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.bestselling-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.bestselling-title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 15px;
+  animation: slideUp 0.8s ease-out;
+}
+
+.bestselling-subtitle {
+  font-size: 1.1rem;
+  color: #999;
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-bottom: 50px;
+  animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.product-card {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #2a2a2a;
+}
+
+.product-card:hover {
+  border-color: #cd7f32;
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(205, 127, 50, 0.2);
+}
+
+.product-image {
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #444;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  background: linear-gradient(135deg, #cd7f32 0%, #a0621f 100%);
+}
+
+.product-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+.badge-bestselling {
+  background: #cd7f32;
+  color: #fff;
+}
+
+.badge-new {
+  background: #1a6b3a;
+  color: #fff;
+}
+
+.badge-sale {
+  background: #dc143c;
+  color: #fff;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.price-current {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #cd7f32;
+}
+
+.price-original {
+  font-size: 0.95rem;
+  color: #666;
+  text-decoration: line-through;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #cd7f32;
+  color: #cd7f32;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.add-to-cart-btn:hover {
+  background: #cd7f32;
+  color: #fff;
+}
+
+.view-all-container {
+  display: flex;
+  justify-content: center;
+  animation: slideUp 0.8s ease-out 0.6s both;
+}
+
+.view-all-btn {
+  padding: 16px 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  border: 2px solid #cd7f32;
+  color: #cd7f32;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.view-all-btn:hover {
+  background: #cd7f32;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(205, 127, 50, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bestselling-products {
+    padding: 60px 15px;
+    margin-bottom: 40px;
+  }
+
+  .bestselling-title {
+    margin-bottom: 10px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .product-image {
+    height: 240px;
+  }
+
+  .product-badge {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+
+  .product-info {
+    padding: 15px;
+  }
+
+  .product-name {
+    font-size: 1rem;
+  }
+
+  .price-current {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bestselling-products {
+    padding: 40px 10px;
+    margin-bottom: 30px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .product-image {
+    height: 200px;
+  }
+
+  .bestselling-title {
+    font-size: 1.6rem;
+  }
+
+  .view-all-btn {
+    padding: 12px 30px;
+    font-size: 0.85rem;
+  }
+}

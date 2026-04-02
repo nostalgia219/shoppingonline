@@ -1,0 +1,280 @@
+.testimonials {
+  width: 100%;
+  padding: 80px 20px;
+  background: #0a0a0a;
+  margin-bottom: 60px;
+}
+
+.testimonials-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.testimonials-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.testimonials-title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 15px;
+  animation: slideUp 0.8s ease-out;
+}
+
+.testimonials-subtitle {
+  font-size: 1.1rem;
+  color: #999;
+  animation: slideUp 0.8s ease-out 0.2s both;
+}
+
+.carousel-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 50px 40px;
+  position: relative;
+  animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.testimonial-content {
+  text-align: center;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.testimonial-text {
+  font-size: 1.1rem;
+  color: #ccc;
+  font-style: italic;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  position: relative;
+  padding: 0 40px;
+}
+
+.testimonial-text::before {
+  content: '"';
+  font-size: 4rem;
+  color: #cd7f32;
+  position: absolute;
+  top: -20px;
+  left: 0;
+  opacity: 0.3;
+}
+
+.testimonial-author {
+  margin-bottom: 20px;
+}
+
+.author-avatar {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  filter: drop-shadow(0 2px 4px rgba(205, 127, 50, 0.2));
+}
+
+.author-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.author-role {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.testimonial-rating {
+  font-size: 1.2rem;
+  color: #cd7f32;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.carousel-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 2px solid #cd7f32;
+  color: #cd7f32;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-btn:hover {
+  background: #cd7f32;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.dot.active {
+  background: #cd7f32;
+  transform: scale(1.2);
+}
+
+.dot:hover {
+  border-color: #cd7f32;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .testimonials {
+    padding: 60px 15px;
+    margin-bottom: 40px;
+  }
+
+  .testimonials-title {
+    margin-bottom: 10px;
+  }
+
+  .carousel-container {
+    padding: 40px 25px;
+  }
+
+  .testimonial-text {
+    font-size: 1rem;
+    padding: 0 20px;
+    margin-bottom: 20px;
+  }
+
+  .testimonial-text::before {
+    font-size: 3rem;
+    top: -15px;
+  }
+
+  .author-avatar {
+    font-size: 2.5rem;
+  }
+
+  .author-name {
+    font-size: 1rem;
+  }
+
+  .author-role {
+    font-size: 0.85rem;
+  }
+
+  .carousel-navigation {
+    gap: 20px;
+  }
+
+  .nav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonials {
+    padding: 40px 10px;
+    margin-bottom: 30px;
+  }
+
+  .carousel-container {
+    padding: 30px 15px;
+  }
+
+  .testimonials-title {
+    font-size: 1.6rem;
+  }
+
+  .testimonial-content {
+    min-height: 200px;
+  }
+
+  .testimonial-text {
+    font-size: 0.95rem;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+
+  .author-avatar {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .author-name {
+    font-size: 0.95rem;
+  }
+
+  .carousel-navigation {
+    gap: 15px;
+  }
+
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .carousel-dots {
+    gap: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}

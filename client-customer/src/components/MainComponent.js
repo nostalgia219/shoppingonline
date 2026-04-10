@@ -11,6 +11,7 @@ import Active from './ActiveComponent';
 import Login from './LoginComponent';
 import Myprofile from './MyprofileComponent';
 import Mycart from './MycartComponent';
+import Checkout from './CheckoutComponent';
 import Myorders from './MyordersComponent';
 class Main extends Component {
   render() {
@@ -30,6 +31,7 @@ class Main extends Component {
             <Route path="/login" element={<Login />} />
             <Route path="/myprofile" element={<Myprofile />} />
             <Route path="/mycart" element={<Mycart />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/myorders" element={<Myorders />} />
         </Routes>
         <Footer />

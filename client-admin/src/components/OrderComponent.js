@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import MyContext from '../contexts/MyContext';
+import './AdminPanel.css';
 
 class Order extends Component {
     static contextType = MyContext; // using this.context to access global state
@@ -8,24 +9,53 @@ class Order extends Component {
         super(props);
         this.state = {
             orders: [],
-            order: null
+            order: null,
+            searchQuery: ''
         };
     }
 
+    getStatusClass = (status) => {
+        const statusMap = {
+            'PENDING': 'status-pending',
+            'PROCESSING': 'status-processing',
+            'SHIPPED': 'status-shipped',
+            'DELIVERED': 'status-delivered',
+            'CANCELLED': 'status-cancelled'
+        };
+        return statusMap[status] || 'status-pending';
+    };
+
     render() {
-        const orders = this.state.orders.map((item) => {
+        const filteredOrders = this.state.orders.filter(item =>
+            item._id.toLowerCase().includes(this.state.searchQuery.toLowerCase()) ||
+            item.customer.name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+        );
+
+        const orders = filteredOrders.map((item) => {
             return (
-                <tr key={item._id} className="datatable" onClick={() => this.trItemClick(item)}>
+                <tr key={item._id} onClick={() => this.trItemClick(item)}>
                     <td>{item._id}</td>
-                    <td>{new Date(item.cdate).toLocaleString()}</td>
                     <td>{item.customer.name}</td>
-                    <td>{item.customer.phone}</td>
-                    <td>{item.total}</td>
-                    <td>{item.status}</td>
+                    <td>{new Date(item.cdate).toLocaleDateString()}</td>
+                    <td>{item.items?.length || 0}</td>
+                    <td>${item.total?.toFixed(2)}</td>
                     <td>
-                        {item.status === 'PENDING' ?
-                            <div><span className="link" onClick={() => this.lnkApproveClick(item._id)}>APPROVE</span> || <span className="link" onClick={() => this.lnkCancelClick(item._id)}>CANCEL</span></div>
-                            : <div />}
+                        <span className={`status-badge ${this.getStatusClass(item.status)}`}>
+                            {item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div className="action-links">
+                            {item.status === 'PENDING' ? (
+                                <>
+                                    <span className="action-link" onClick={(e) => { e.stopPropagation(); this.lnkApproveClick(item._id); }}>APPROVE</span>
+                                    <span> | </span>
+                                    <span className="action-link" onClick={(e) => { e.stopPropagation(); this.lnkCancelClick(item._id); }}>CANCEL</span>
+                                </>
+                            ) : (
+                                <span className="action-link">—</span>
+                            )}
+                        </div>
                     </td>
                 </tr>
             );
@@ -33,59 +63,68 @@ class Order extends Component {
         if (this.state.order) {
             var items = this.state.order.items.map((item, index) => {
                 return (
-                    <tr key={item.product._id} className="datatable" >
-                        <td >{index + 1} </ td >
-                        <td >{item.product._id} </ td >
-                        <td >{item.product.name} </ td >
-                        <td > < img src={"data:image/jpg;base64," + item.product.image} width="70px" height="70px" alt="" /> </ td >
-                        <td >{item.product.price} </ td >
-                        <td >{item.quantity} </ td >
-                        <td >{item.product.price * item.quantity} </ td >
-                    </ tr >
+                    <div key={item.product._id} className="detail-item">
+                        <img src={"data:image/jpg;base64," + item.product.image} alt="" className="detail-item-img" />
+                        <div className="detail-item-info">
+                            <div className="detail-item-name">{item.product.name}</div>
+                            <div className="detail-item-qty">Quantity: {item.quantity}x @ ${item.product.price}/each</div>
+                        </div>
+                        <div style={{ fontWeight: 600 }}>${(item.product.price * item.quantity)?.toFixed(2)}</div>
+                    </div>
                 );
             });
         }
         return (
-            <div >
-                < div className="align-center">
-                    < h2 className="text-center"> ORDER LIST </ h2 >
-                    < table className="datatable" border="1">
-                        < tbody >
-                            < tr className="datatable">
-                                <th > ID </ th >
-                                <th > Creation date </ th >
-                                <th > Cust.name </ th >
-                                <th > Cust.phone </ th >
-                                <th > Total </ th >
-                                <th > Status </ th >
-                                <th > Action </ th >
-                            </ tr >
-                            {orders}
-                        </ tbody >
-                    </ table >
-                </ div >
-                {
-                    this.state.order ?
-                        < div className="align-center ">
-                            < h2 className="text-center "> ORDER DETAIL </ h2 >
-                            < table className="datatable" border="1">
-                                < tbody >
-                                    < tr className="datatable">
-                                        <th>No.</ th >
-                                        <th > Prod.ID </ th >
-                                        <th > Prod.name </ th >
-                                        <th > Image </ th >
-                                        <th > Price </ th >
-                                        <th > Quantity </ th >
-                                        <th > Amount </ th >
-                                    </ tr >
-                                    {items}
-                                </ tbody >
-                            </ table >
-                        </ div >
-                        : < div />
-                }
-            </ div >
+            <div className="admin-container">
+                <div className="admin-content">
+                    {/* Toolbar */}
+                    <div className="admin-toolbar">
+                        <div className="search-box">
+                            <span className="search-icon">🔍</span>
+                            <input
+                                type="text"
+                                placeholder="Search orders..."
+                                value={this.state.searchQuery}
+                                onChange={(e) => this.setState({ searchQuery: e.target.value })}
+                            />
+                        </div>
+                        <div className="toolbar-actions">
+                            <button className="filter-btn">🔻 Filter</button>
+                            <button className="bulk-export-btn">📥 Export</button>
+                        </div>
+                    </div>
+
+                    {/* Orders Table */}
+                    <div className="admin-table-container">
+                        <table className="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Order Details */}
+                    {this.state.order && (
+                        <div className="detail-section">
+                            <h3>Order Details - {this.state.order._id}</h3>
+                            <div className="detail-items">
+                                {items}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         );
     }
     componentDidMount() {

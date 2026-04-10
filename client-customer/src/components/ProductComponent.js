@@ -2,9 +2,11 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import withRouter from '../utils/withRouter';
+import MyContext from '../contexts/MyContext';
 import './ProductComponent.css';
 
 class Product extends Component {
+  static contextType = MyContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -378,9 +380,27 @@ class Product extends Component {
   }
 
   addToCart(item) {
-    // Implement add to cart logic - you can integrate with your cart context/state here
-    console.log('Added to cart:', item);
-    // TODO: Add to cart state management
+    const quantity = 1; // default quantity from product listing
+    
+    if (quantity && quantity > 0) {
+      const mycart = this.context.mycart;
+      const index = mycart.findIndex(x => x.product._id === item._id);
+      
+      if (index === -1) {
+        // Product not in cart, add it
+        const newItem = { product: item, quantity: quantity };
+        mycart.push(newItem);
+      } else {
+        // Product already in cart, increment quantity
+        mycart[index].quantity += quantity;
+      }
+      
+      // Update cart in context
+      this.context.setMycart(mycart);
+      alert(`Added "${item.name}" to cart!`);
+    } else {
+      alert('Please select a valid quantity');
+    }
   }
 }
 

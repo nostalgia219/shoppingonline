@@ -240,9 +240,7 @@ class Inform extends Component {
   }
 
   lnkLogoutClick() {
-    this.context.setToken('');
-    this.context.setCustomer(null);
-    this.context.setMycart([]);
+    this.context.logout();
     this.setState({ userMenuOpen: false });
   }
 

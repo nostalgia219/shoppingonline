@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import MyContext from "../contexts/MyContext";
+import './AdminPanel.css';
 
 class ProductDetail extends Component {
   static contextType = MyContext;
@@ -17,122 +18,178 @@ class ProductDetail extends Component {
   }
   render() {
     const cates = this.state.categories.map((cate) => {
-      if (this.props.item != null) {
-        return (
-          <option
-            key={cate._id}
-            value={cate._id}
-            selected={cate._id === this.props.item.category._id}
-          >
-            {cate.name}
-          </option>
-        );
-      } else {
-        return (
-          <option key={cate._id} value={cate._id}>
-            {cate.name}
-          </option>
-        );
-      }
+      return (
+        <option
+          key={cate._id}
+          value={cate._id}
+          selected={this.state.cmbCategory === cate._id}
+        >
+          {cate.name}
+        </option>
+      );
     });
+
+    const isNewProduct = this.props.item && this.props.item._id === '';
+
     return (
-      <div className="float-right">
-        <h2 className="text-center">PRODUCT DETAIL</h2>
-        <form>
-          <table>
-            <tbody>
-              <tr>
-                <td>ID</td>
-                <td>
-                  <input
-                    type="text"
-                    value={this.state.txtID}
-                    onChange={(e) => {
-                      this.setState({ txtID: e.target.value });
-                    }}
-                    readOnly={true}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Name</td>
-                <td>
-                  <input
-                    type="text"
-                    value={this.state.txtName}
-                    onChange={(e) => {
-                      this.setState({ txtName: e.target.value });
-                    }}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Price</td>
-                <td>
-                  <input
-                    type="text"
-                    value={this.state.txtPrice}
-                    onChange={(e) => {
-                      this.setState({ txtPrice: e.target.value });
-                    }}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Image</td>
-                <td>
-                  <input
-                    type="file"
-                    name="fileImage"
-                    accept="image/jpeg, image/png, image/gif"
-                    onChange={(e) => this.previewImage(e)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Category</td>
-                <td>
-                  <select
-                    onChange={(e) => {
-                      this.setState({ cmbCategory: e.target.value });
-                    }}
-                  >
-                    {cates}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <input
-                    type="submit"
-                    value="ADD NEW"
-                    onClick={(e) => this.btnAddClick(e)}
-                  />
-                  <input
-                    type="submit"
-                    value="UPDATE"
-                    onClick={(e) => this.btnUpdateClick(e)}
-                  />
-                  <input
-                    type="submit"
-                    value="DELETE"
-                    onClick={(e) => this.btnDeleteClick(e)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  <img
-                    src={this.state.imgProduct}
-                    width="300px"
-                    height="300px"
-                    alt=""
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="detail-section">
+        <h3>{isNewProduct ? 'Add New Product' : `Edit Product - ${this.state.txtID}`}</h3>
+        <form style={{ display: 'grid', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Product Name *</label>
+              <input
+                type="text"
+                placeholder="Enter product name"
+                value={this.state.txtName}
+                onChange={(e) => this.setState({ txtName: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#0f0f0f',
+                  color: '#fff',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Price *</label>
+              <input
+                type="number"
+                placeholder="Enter price"
+                value={this.state.txtPrice}
+                onChange={(e) => this.setState({ txtPrice: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#0f0f0f',
+                  color: '#fff',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Category *</label>
+              <select
+                value={this.state.cmbCategory}
+                onChange={(e) => this.setState({ cmbCategory: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#0f0f0f',
+                  color: '#fff',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <option value="">-- Select Category --</option>
+                {cates}
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Product Image *</label>
+              <input
+                type="file"
+                name="fileImage"
+                accept="image/jpeg, image/png, image/gif"
+                onChange={(e) => this.previewImage(e)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#0f0f0f',
+                  color: '#999',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Image Preview */}
+          {this.state.imgProduct && (
+            <div style={{ padding: '16px', backgroundColor: '#0f0f0f', borderRadius: '6px', textAlign: 'center' }}>
+              <p style={{ marginBottom: '12px', fontSize: '12px', color: '#999' }}>Image Preview</p>
+              <img
+                src={this.state.imgProduct}
+                alt="Product preview"
+                style={{
+                  maxWidth: '200px',
+                  maxHeight: '200px',
+                  borderRadius: '6px',
+                  border: '1px solid #444'
+                }}
+              />
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            {isNewProduct ? (
+              <button
+                type="submit"
+                onClick={(e) => this.btnAddClick(e)}
+                style={{
+                  padding: '10px 24px',
+                  backgroundColor: '#2d7d4d',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  transition: 'all 0.3s'
+                }}
+              >
+                ✚ Add Product
+              </button>
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  onClick={(e) => this.btnUpdateClick(e)}
+                  style={{
+                    padding: '10px 24px',
+                    backgroundColor: '#3b82f6',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  ✏️ Update
+                </button>
+                <button
+                  type="submit"
+                  onClick={(e) => this.btnDeleteClick(e)}
+                  style={{
+                    padding: '10px 24px',
+                    backgroundColor: '#ef4444',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  🗑️ Delete
+                </button>
+              </>
+            )}
+          </div>
         </form>
       </div>
     );
@@ -142,13 +199,26 @@ class ProductDetail extends Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.item !== prevProps.item) {
-      this.setState({
-        txtID: this.props.item._id,
-        txtName: this.props.item.name,
-        txtPrice: this.props.item.price,
-        cmbCategory: this.props.item.category._id,
-        imgProduct: "data:image/jpg;base64," + this.props.item.image,
-      });
+      // Handle new product (empty ID) vs editing existing product
+      if (this.props.item._id === '') {
+        // New product - clear form
+        this.setState({
+          txtID: '',
+          txtName: '',
+          txtPrice: 0,
+          cmbCategory: '',
+          imgProduct: '',
+        });
+      } else {
+        // Existing product - populate form
+        this.setState({
+          txtID: this.props.item._id,
+          txtName: this.props.item.name,
+          txtPrice: this.props.item.price,
+          cmbCategory: this.props.item.category._id,
+          imgProduct: "data:image/jpg;base64," + this.props.item.image,
+        });
+      }
     }
   }
   // event-handlers
@@ -229,24 +299,28 @@ class ProductDetail extends Component {
     const config = { headers: { "x-access-token": this.context.token } };
     axios.post("/api/admin/products", prod, config).then((res) => {
       const result = res.data;
-      if (result) {
-        alert("SUCCESS!");
+      if (result && result.success !== false) {
+        alert("Product added successfully!");
         this.apiGetProducts();
       } else {
-        alert("FAIL!");
+        alert("Failed to add product!");
       }
+    }).catch(err => {
+      alert("Error: " + err.message);
     });
   }
   apiDeleteProduct(id) {
     const config = { headers: { "x-access-token": this.context.token } };
     axios.delete("/api/admin/products/" + id, config).then((res) => {
       const result = res.data;
-      if (result) {
-        alert("OK BABY !");
+      if (result && result.success !== false) {
+        alert("Product deleted successfully!");
         this.apiGetProducts();
       } else {
-        alert("SORRY BABY !");
+        alert("Failed to delete product!");
       }
+    }).catch(err => {
+      alert("Error: " + err.message);
     });
   }
   apiGetProducts() {
@@ -256,13 +330,13 @@ class ProductDetail extends Component {
       .then((res) => {
         const result = res.data;
         if (result.products.length !== 0) {
-          this.props.updateProducts(result.products, result.noPages);
+          this.props.updateProducts(result.products, result.noPages, result.curPage);
         } else {
           axios
             .get("/api/admin/products?page=" + (this.props.curPage - 1), config)
             .then((res) => {
               const result = res.data;
-              this.props.updateProducts(result.products, result.noPages);
+              this.props.updateProducts(result.products, result.noPages, result.curPage);
             });
         }
       });
@@ -272,12 +346,14 @@ class ProductDetail extends Component {
     const config = { headers: { "x-access-token": this.context.token } };
     axios.put("/api/admin/products/" + id, prod, config).then((res) => {
       const result = res.data;
-      if (result) {
-        alert("OK BABY !");
+      if (result && result.success !== false) {
+        alert("Product updated successfully!");
         this.apiGetProducts();
       } else {
-        alert("SORRY BABY !");
+        alert("Failed to update product!");
       }
+    }).catch(err => {
+      alert("Error: " + err.message);
     });
   }
 }

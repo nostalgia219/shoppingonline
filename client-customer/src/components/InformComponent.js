@@ -197,7 +197,7 @@ class Inform extends Component {
         )}
 
         {/* Search Bar */}
-        <div className="header-search-bar" id="searchBar" style={{ display: 'none' }}>
+        <div className="header-search-bar" id="searchBar">
           <input
             type="text"
             placeholder="Search products…"

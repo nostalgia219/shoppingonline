@@ -31,8 +31,31 @@ class Product extends Component {
   }
 
   componentDidMount() {
-    this.loadProducts();
+    this.loadInitialData();
+  }
+
+  componentDidUpdate(prevProps) {
+    // Check if the route params changed (for category or search)
+    if (this.props.params !== prevProps.params) {
+      this.loadInitialData();
+    }
+  }
+
+  loadInitialData = () => {
     this.loadCategories();
+    const keyword = this.props.params?.keyword;
+    const categoryId = this.props.params?.cid;
+
+    if (keyword) {
+      // Search mode
+      this.loadProductsByKeyword(keyword);
+    } else if (categoryId) {
+      // Category mode
+      this.loadProductsByCategory(categoryId);
+    } else {
+      // All products
+      this.loadProducts();
+    }
   }
 
   loadProducts = () => {
@@ -41,6 +64,22 @@ class Product extends Component {
         products: res.data || []
       }, () => this.applyFilters());
     }).catch(err => console.error('Error loading products:', err));
+  };
+
+  loadProductsByKeyword = (keyword) => {
+    axios.get(`/api/customer/products/search/${keyword}`).then(res => {
+      this.setState({ 
+        products: res.data || []
+      }, () => this.applyFilters());
+    }).catch(err => console.error('Error searching products:', err));
+  };
+
+  loadProductsByCategory = (categoryId) => {
+    axios.get(`/api/customer/products/category/${categoryId}`).then(res => {
+      this.setState({ 
+        products: res.data || []
+      }, () => this.applyFilters());
+    }).catch(err => console.error('Error loading category products:', err));
   };
 
   loadCategories = () => {
@@ -159,7 +198,16 @@ class Product extends Component {
         <main className="products-main">
           {/* Header */}
           <div>
-            <h1 className="products-title">Our Products</h1>
+            {this.props.params?.keyword ? (
+              <>
+                <h1 className="products-title">Search Results</h1>
+                <p className="products-search-keyword">for "{this.props.params.keyword}"</p>
+              </>
+            ) : this.props.params?.cid ? (
+              <h1 className="products-title">{this.state.selectedCategory?.name || 'Category Products'}</h1>
+            ) : (
+              <h1 className="products-title">Our Products</h1>
+            )}
             <p className="products-count">Showing {filteredProducts.length} products</p>
           </div>
 

@@ -236,6 +236,14 @@
   margin-top: 8px;
 }
 
+.products-search-keyword {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--bronze);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
 /* ===== TOOLBAR ===== */
 .products-toolbar {
   display: flex;

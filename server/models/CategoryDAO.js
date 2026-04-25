@@ -5,7 +5,21 @@ const CategoryDAO = {
   async selectAll() {
     const query = {};
     const categories = await Models.Category.find(query).exec();
-    return categories;
+    
+    // Add product count for each category
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Models.Product.countDocuments({
+          'category._id': category._id
+        }).exec();
+        return {
+          ...category.toObject(),
+          productCount: productCount
+        };
+      })
+    );
+    
+    return categoriesWithCount;
   },
   async insert(category) {
     const mongoose = require("mongoose");

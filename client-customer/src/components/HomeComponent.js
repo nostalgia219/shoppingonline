@@ -56,48 +56,52 @@ class Home extends Component {
       </div>
     ));
 
-    const newprods = this.state.newprods.map((item) => {
-      return (
-        <div key={item._id} className="product-card-luxury">
-          <div className="product-image-wrapper">
-            <Link to={'/product/' + item._id}>
-              <img
-                src={"data:image/jpg;base64," + item.image}
-                alt={item.name}
-                className="product-image"
-                loading="lazy"
-              />
-              <div className="product-overlay">
-                <span className="view-details">View Details</span>
-              </div>
-            </Link>
+    const newprods = this.state.newprods
+      .filter(item => item && item._id) // Filter out null/undefined items
+      .map((item) => {
+        return (
+          <div key={item._id} className="product-card-luxury">
+            <div className="product-image-wrapper">
+              <Link to={'/product/' + item._id}>
+                <img
+                  src={"data:image/jpg;base64," + item.image}
+                  alt={item.name}
+                  className="product-image"
+                  loading="lazy"
+                />
+                <div className="product-overlay">
+                  <span className="view-details">View Details</span>
+                </div>
+              </Link>
+            </div>
+            <div className="product-info">
+              <h3 className="product-name-luxury">{item.name}</h3>
+              <p className="product-price-luxury">${item.price.toFixed(2)}</p>
+              <Link to={'/product/' + item._id} className="add-to-cart-btn">Add to Cart</Link>
+            </div>
           </div>
-          <div className="product-info">
-            <h3 className="product-name-luxury">{item.name}</h3>
-            <p className="product-price-luxury">${item.price.toFixed(2)}</p>
-            <Link to={'/product/' + item._id} className="add-to-cart-btn">Add to Cart</Link>
-          </div>
-        </div>
-      );
-    });
+        );
+      });
 
-    const hotprods = this.state.hotprods.map((item) => {
-      return (
-        <div key={item._id} className="product-card-luxury featured">
-          <div className="badge-premium">Featured</div>
-          <div className="product-image-wrapper">
-            <Link to={'/product/' + item._id}>
-              <img
-                src={"data:image/jpg;base64," + item.image}
-                alt={item.name}
-                className="product-image"
-                loading="lazy"
-              />
-              <div className="product-overlay">
-                <span className="view-details">View Details</span>
-              </div>
-            </Link>
-          </div>
+    const hotprods = this.state.hotprods
+      .filter(item => item && item._id) // Filter out null/undefined items
+      .map((item) => {
+        return (
+          <div key={item._id} className="product-card-luxury featured">
+            <div className="badge-premium">Featured</div>
+            <div className="product-image-wrapper">
+              <Link to={'/product/' + item._id}>
+                <img
+                  src={"data:image/jpg;base64," + item.image}
+                  alt={item.name}
+                  className="product-image"
+                  loading="lazy"
+                />
+                <div className="product-overlay">
+                  <span className="view-details">View Details</span>
+                </div>
+              </Link>
+            </div>
           <div className="product-info">
             <h3 className="product-name-luxury">{item.name}</h3>
             <p className="product-price-luxury">${item.price.toFixed(2)}</p>

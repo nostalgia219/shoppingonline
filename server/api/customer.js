@@ -25,7 +25,29 @@ router.post('/checkout', JwtUtil.checkToken, async function (req, res) {
   const total = req.body.total;
   const items = req.body.items;
   const customer = req.body.customer;
-  const order = { cdate: now, total: total, status: 'PENDING', customer: customer, items: items };
+  
+  // Calculate subtotal from items
+  const subtotal = items.reduce((sum, item) => {
+    return sum + (item.product.price * item.quantity);
+  }, 0);
+  
+  // Calculate shipping (FREE for now, can be adjusted)
+  const shipping = 0;
+  
+  // Calculate tax (10% of subtotal)
+  const tax = subtotal * 0.1;
+  
+  // Create order with all price details
+  const order = { 
+    cdate: now, 
+    subtotal: subtotal,
+    shipping: shipping,
+    tax: tax,
+    total: subtotal + shipping + tax, 
+    status: 'PENDING', 
+    customer: customer, 
+    items: items 
+  };
   const result = await OrderDAO.insert(order);
   res.json(result);
 });

@@ -12,10 +12,23 @@ class ProductDetail extends Component {
       txtID: "",
       txtName: "",
       txtPrice: 0,
+      txtStock: 0,
+      txtStatus: "Active",
+      txtDescription: "",
       cmbCategory: "",
       imgProduct: "",
     };
   }
+  handleCloseModal = () => {
+    // Clear the selected item from parent component
+    if (this.props.item && this.props.item._id === '') {
+      // For new product, we need to clear it from parent
+      this.props.onClose && this.props.onClose();
+    } else {
+      this.props.onClose && this.props.onClose();
+    }
+  }
+
   render() {
     const cates = this.state.categories.map((cate) => {
       return (
@@ -32,170 +45,187 @@ class ProductDetail extends Component {
     const isNewProduct = this.props.item && this.props.item._id === '';
 
     return (
-      <div className="detail-section">
-        <h3>{isNewProduct ? 'Add New Product' : `Edit Product - ${this.state.txtID}`}</h3>
-        <form style={{ display: 'grid', gap: '20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Product Name *</label>
-              <input
-                type="text"
-                placeholder="Enter product name"
-                value={this.state.txtName}
-                onChange={(e) => this.setState({ txtName: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  backgroundColor: '#0f0f0f',
-                  color: '#fff',
-                  border: '1px solid #444',
-                  borderRadius: '6px',
-                  boxSizing: 'border-box'
-                }}
-              />
+      <div className="modal-overlay" onClick={this.handleCloseModal}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2 className="modal-title">{isNewProduct ? 'Add New Product' : 'Edit Product'}</h2>
+            <button className="modal-close-btn" onClick={this.handleCloseModal}>✕</button>
+          </div>
+
+          <form className="modal-form">
+            {/* Product Name and Category */}
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Product Name <span className="required">*</span></label>
+                <input
+                  type="text"
+                  placeholder="Enter product name"
+                  className="modal-input"
+                  value={this.state.txtName}
+                  onChange={(e) => this.setState({ txtName: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Category <span className="required">*</span></label>
+                <select
+                  className="modal-select"
+                  value={this.state.cmbCategory}
+                  onChange={(e) => this.setState({ cmbCategory: e.target.value })}
+                >
+                  <option value="">-- Select Category --</option>
+                  {cates}
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Price *</label>
-              <input
-                type="number"
-                placeholder="Enter price"
-                value={this.state.txtPrice}
-                onChange={(e) => this.setState({ txtPrice: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  backgroundColor: '#0f0f0f',
-                  color: '#fff',
-                  border: '1px solid #444',
-                  borderRadius: '6px',
-                  boxSizing: 'border-box'
-                }}
-              />
+            {/* Price, Stock, and Status */}
+            <div className="form-row-3">
+              <div className="form-group">
+                <label className="form-label">Price ($) <span className="required">*</span></label>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  className="modal-input"
+                  value={this.state.txtPrice || 0}
+                  onChange={(e) => this.setState({ txtPrice: parseFloat(e.target.value) || 0 })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Stock Quantity <span className="required">*</span></label>
+                <input
+                  type="number"
+                  placeholder="0"
+                  className="modal-input"
+                  value={this.state.txtStock || 0}
+                  onChange={(e) => this.setState({ txtStock: parseInt(e.target.value) || 0 })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Status <span className="required">*</span></label>
+                <select
+                  className="modal-select"
+                  value={this.state.txtStatus || 'Active'}
+                  onChange={(e) => this.setState({ txtStatus: e.target.value })}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Category *</label>
-              <select
-                value={this.state.cmbCategory}
-                onChange={(e) => this.setState({ cmbCategory: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  backgroundColor: '#0f0f0f',
-                  color: '#fff',
-                  border: '1px solid #444',
-                  borderRadius: '6px',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <option value="">-- Select Category --</option>
-                {cates}
-              </select>
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Product Image *</label>
+            {/* Image Upload */}
+            <div className="form-group">
+              <label className="form-label">Image <span className="required">*</span></label>
               <input
                 type="file"
                 name="fileImage"
                 accept="image/jpeg, image/png, image/gif"
+                className="modal-input"
                 onChange={(e) => this.previewImage(e)}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  backgroundColor: '#0f0f0f',
-                  color: '#999',
-                  border: '1px solid #444',
-                  borderRadius: '6px',
-                  boxSizing: 'border-box'
-                }}
               />
             </div>
-          </div>
 
-          {/* Image Preview */}
-          {this.state.imgProduct && (
-            <div style={{ padding: '16px', backgroundColor: '#0f0f0f', borderRadius: '6px', textAlign: 'center' }}>
-              <p style={{ marginBottom: '12px', fontSize: '12px', color: '#999' }}>Image Preview</p>
-              <img
-                src={this.state.imgProduct}
-                alt="Product preview"
-                style={{
-                  maxWidth: '200px',
-                  maxHeight: '200px',
-                  borderRadius: '6px',
-                  border: '1px solid #444'
-                }}
-              />
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            {isNewProduct ? (
-              <button
-                type="submit"
-                onClick={(e) => this.btnAddClick(e)}
-                style={{
-                  padding: '10px 24px',
-                  backgroundColor: '#2d7d4d',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  transition: 'all 0.3s'
-                }}
-              >
-                ✚ Add Product
-              </button>
-            ) : (
-              <>
-                <button
-                  type="submit"
-                  onClick={(e) => this.btnUpdateClick(e)}
-                  style={{
-                    padding: '10px 24px',
-                    backgroundColor: '#3b82f6',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  ✏️ Update
-                </button>
-                <button
-                  type="submit"
-                  onClick={(e) => this.btnDeleteClick(e)}
-                  style={{
-                    padding: '10px 24px',
-                    backgroundColor: '#ef4444',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  🗑️ Delete
-                </button>
-              </>
+            {/* Image Preview */}
+            {this.state.imgProduct && (
+              <div className="image-preview-section">
+                <p className="preview-label">Image Preview:</p>
+                <img
+                  src={this.state.imgProduct}
+                  alt="Product preview"
+                  className="preview-image"
+                />
+              </div>
             )}
-          </div>
-        </form>
+
+            {/* Description */}
+            <div className="form-group">
+              <label className="form-label">Description</label>
+              <textarea
+                placeholder="Enter product description"
+                className="modal-textarea"
+                value={this.state.txtDescription}
+                onChange={(e) => this.setState({ txtDescription: e.target.value })}
+                rows="4"
+              ></textarea>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="modal-buttons">
+              <button
+                type="button"
+                className="modal-btn cancel-btn"
+                onClick={this.handleCloseModal}
+              >
+                Cancel
+              </button>
+              {isNewProduct ? (
+                <button
+                  type="submit"
+                  className="modal-btn submit-btn"
+                  onClick={(e) => this.btnAddClick(e)}
+                >
+                  ✚ Add Product
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="modal-btn submit-btn"
+                  onClick={(e) => this.btnUpdateClick(e)}
+                >
+                  📝 Update Product
+                </button>
+              )}
+            </div>
+
+            {/* Delete Button for Existing Products */}
+            {!isNewProduct && (
+              <button
+                type="button"
+                className="modal-btn delete-btn full-width"
+                onClick={(e) => this.btnDeleteClick(e)}
+              >
+                🗑️ Delete Product
+              </button>
+            )}
+          </form>
+        </div>
       </div>
     );
   }
   componentDidMount() {
     this.apiGetCategories();
+    // Initialize form with current product data on mount
+    if (this.props.item) {
+      if (this.props.item._id === '') {
+        // New product - clear form
+        this.setState({
+          txtID: '',
+          txtName: '',
+          txtPrice: 0,
+          txtStock: 0,
+          txtStatus: 'Active',
+          txtDescription: '',
+          cmbCategory: '',
+          imgProduct: '',
+        });
+      } else {
+        // Existing product - populate form
+        this.setState({
+          txtID: this.props.item._id,
+          txtName: this.props.item.name,
+          txtPrice: this.props.item.price,
+          txtStock: this.props.item.stock || 0,
+          txtStatus: this.props.item.status || 'Active',
+          txtDescription: this.props.item.description || '',
+          cmbCategory: this.props.item.category._id,
+          imgProduct: "data:image/jpg;base64," + this.props.item.image,
+        });
+      }
+    }
   }
   componentDidUpdate(prevProps) {
     if (this.props.item !== prevProps.item) {
@@ -206,6 +236,9 @@ class ProductDetail extends Component {
           txtID: '',
           txtName: '',
           txtPrice: 0,
+          txtStock: 0,
+          txtStatus: 'Active',
+          txtDescription: '',
           cmbCategory: '',
           imgProduct: '',
         });
@@ -215,6 +248,9 @@ class ProductDetail extends Component {
           txtID: this.props.item._id,
           txtName: this.props.item.name,
           txtPrice: this.props.item.price,
+          txtStock: this.props.item.stock || 0,
+          txtStatus: this.props.item.status || 'Active',
+          txtDescription: this.props.item.description || '',
           cmbCategory: this.props.item.category._id,
           imgProduct: "data:image/jpg;base64," + this.props.item.image,
         });
@@ -236,6 +272,9 @@ class ProductDetail extends Component {
     e.preventDefault();
     const name = this.state.txtName;
     const price = parseInt(this.state.txtPrice);
+    const stock = parseInt(this.state.txtStock);
+    const status = this.state.txtStatus;
+    const description = this.state.txtDescription;
     const category = this.state.cmbCategory;
     const image = this.state.imgProduct.replace(
       /^data:image\/[a-z]+;base64,/,
@@ -245,6 +284,9 @@ class ProductDetail extends Component {
       const prod = {
         name: name,
         price: price,
+        stock: stock,
+        status: status,
+        description: description,
         category: category,
         image: image,
       };
@@ -258,6 +300,9 @@ class ProductDetail extends Component {
     const id = this.state.txtID;
     const name = this.state.txtName;
     const price = parseInt(this.state.txtPrice);
+    const stock = parseInt(this.state.txtStock);
+    const status = this.state.txtStatus;
+    const description = this.state.txtDescription;
     const category = this.state.cmbCategory;
     const image = this.state.imgProduct.replace(
       /^data:image\/[a-z]+;base64,/,
@@ -268,6 +313,9 @@ class ProductDetail extends Component {
       const prod = {
         name: name,
         price: price,
+        stock: stock,
+        status: status,
+        description: description,
         category: category,
         image: image,
       };
@@ -302,6 +350,7 @@ class ProductDetail extends Component {
       if (result && result.success !== false) {
         alert("Product added successfully!");
         this.apiGetProducts();
+        this.handleCloseModal();
       } else {
         alert("Failed to add product!");
       }
@@ -316,6 +365,7 @@ class ProductDetail extends Component {
       if (result && result.success !== false) {
         alert("Product deleted successfully!");
         this.apiGetProducts();
+        this.handleCloseModal();
       } else {
         alert("Failed to delete product!");
       }
@@ -349,6 +399,7 @@ class ProductDetail extends Component {
       if (result && result.success !== false) {
         alert("Product updated successfully!");
         this.apiGetProducts();
+        this.handleCloseModal();
       } else {
         alert("Failed to update product!");
       }

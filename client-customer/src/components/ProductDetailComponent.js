@@ -39,6 +39,18 @@ class ProductDetail extends Component {
         {/* Container */}
         <div className="product-detail-container">
           
+          {/* Breadcrumb Navigation */}
+          <div className="product-detail-breadcrumb">
+            <span>Home</span>
+            <span className="breadcrumb-separator">/</span>
+            <span>Products</span>
+            <span className="breadcrumb-separator">/</span>
+            <span>{prod.name}</span>
+          </div>
+
+          {/* Back to Products Link */}
+          <a href="#/product" className="back-link">← Back to Products</a>
+          
           {/* Main Product Section */}
           <div className="product-main-section">
             

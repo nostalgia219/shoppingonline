@@ -59,6 +59,9 @@ const OrderSchema = mongoose.Schema(
   {
     _id: mongoose.Schema.Types.ObjectId,
     cdate: Number,
+    subtotal: Number,
+    shipping: Number,
+    tax: Number,
     total: Number,
     status: String,
     customer: CustomerSchema,

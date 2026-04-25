@@ -18,14 +18,14 @@ class Product extends Component {
   }
 
   getStockStatus = (stock) => {
-    if (stock === 0) return 'out-of-stock';
+    if (stock === 0) return 'status-out-of-stock';
     if (stock < 10) return 'status-pending';
     return 'status-active';
   };
 
   getStockLabel = (stock) => {
-    if (stock === 0) return 'Out of Stock';
-    if (stock < 10) return `Low (${stock})`;
+    if (stock === 0) return 'Out Of Stock';
+    if (stock < 10) return 'Low Stock';
     return 'Active';
   };
 
@@ -37,26 +37,27 @@ class Product extends Component {
 
     const prods = filteredProducts.map((item) => {
       return (
-        <tr key={item._id} onClick={() => this.trItemClick(item)}>
-          <td>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <img src={"data:image/jpg;base64," + item.image} alt="" className="product-img" />
-              <span>{item.name}</span>
+        <tr key={item._id} className="product-row">
+          <td className="product-cell">
+            <div className="product-info">
+              <img src={"data:image/jpg;base64," + item.image} alt={item.name} className="product-img" />
+              <span className="product-name">{item.name}</span>
             </div>
           </td>
-          <td>{item.category.name}</td>
-          <td>${item.price?.toFixed(2)}</td>
-          <td>{item.stock || 0}</td>
-          <td>{new Date(item.cdate).toLocaleDateString()}</td>
-          <td>
+          <td className="category-cell">{item.category?.name || 'Uncategorized'}</td>
+          <td className="price-cell">${item.price?.toFixed(2)}</td>
+          <td className="stock-cell">{item.stock || 0}</td>
+          <td className="sales-cell">{item.sales || 0}</td>
+          <td className="status-cell">
             <span className={`status-badge ${this.getStockStatus(item.stock)}`}>
               {this.getStockLabel(item.stock)}
             </span>
           </td>
-          <td>
-            <div className="action-links">
-              <span className="action-link" onClick={(e) => { e.stopPropagation(); this.trItemClick(item); }}>✏️ Edit</span>
-              <span className="action-link">🗑️ Delete</span>
+          <td className="actions-cell">
+            <div className="action-icons">
+              <button className="action-icon view-btn" title="View">👁‍🗨️</button>
+              <button className="action-icon edit-btn" onClick={(e) => { e.stopPropagation(); this.trItemClick(item); }} title="Edit">✏️</button>
+              <button className="action-icon delete-btn" onClick={(e) => { e.stopPropagation(); this.handleDeleteProduct(item._id); }} title="Delete">🗑️</button>
             </div>
           </td>
         </tr>
@@ -100,7 +101,7 @@ class Product extends Component {
                   <th>Category</th>
                   <th>Price</th>
                   <th>Stock</th>
-                  <th>Added</th>
+                  <th>Sales</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -118,9 +119,14 @@ class Product extends Component {
             </div>
           )}
 
-          {/* Product Details Editor */}
+          {/* Product Details Editor Modal */}
           {this.state.itemSelected && (
-            <ProductDetail item={this.state.itemSelected} curPage={this.state.curPage} updateProducts={this.updateProducts} />
+            <ProductDetail 
+              item={this.state.itemSelected} 
+              curPage={this.state.curPage} 
+              updateProducts={this.updateProducts}
+              onClose={() => this.setState({ itemSelected: null })}
+            />
           )}
         </div>
       </div>
@@ -153,12 +159,33 @@ class Product extends Component {
     };
     this.setState({ itemSelected: newProduct });
   }
+
+  handleDeleteProduct = (productId) => {
+    if (window.confirm("ARE YOU SURE ?")) {
+      this.apiDeleteProduct(productId);
+    }
+  }
   // apis
   apiGetProducts(page) {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.get('/api/admin/products?page=' + page, config).then((res) => {
       const result = res.data;
       this.setState({ products: result.products, noPages: result.noPages, curPage: result.curPage });
+    });
+  }
+
+  apiDeleteProduct(productId) {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.delete('/api/admin/products/' + productId, config).then((res) => {
+      const result = res.data;
+      if (result && result.success !== false) {
+        alert('Product deleted successfully!');
+        this.apiGetProducts(this.state.curPage);
+      } else {
+        alert('Failed to delete product!');
+      }
+    }).catch((err) => {
+      alert('Error: ' + err.message);
     });
   }
 }
